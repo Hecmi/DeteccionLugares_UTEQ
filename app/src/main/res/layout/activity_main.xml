@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btGallery2"
+        android:layout_width="160dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_marginEnd="10dp"
+        android:onClick="btn_LeerTexto"
+        android:text="LEER"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btCamera"
+        app:layout_constraintStart_toEndOf="@+id/btCamera" />
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/btGallery2"
+        app:layout_constraintTop_toBottomOf="@+id/txtresults"
+        tools:layout_editor_absoluteX="10dp">
+
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/txtresults"
+        android:layout_width="178dp"
+        android:layout_height="35dp"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical"
+        android:text="Resultados:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btCamera"
+        android:layout_width="199dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="4dp"
+        android:onClick="abrirCamera"
+        android:text="Cámara"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/txtPorcentajeValido"
+        android:layout_width="99dp"
+        android:layout_height="36dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="80"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtresults"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txtresults"
+        app:layout_constraintTop_toTopOf="@+id/txtresults" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
