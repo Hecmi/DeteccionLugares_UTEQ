@@ -16,8 +16,7 @@
         android:text="LEER"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btCamera"
-        app:layout_constraintStart_toEndOf="@+id/btCamera" />
+        app:layout_constraintRight_toLeftOf="@+id/btCamera" />
 
     <FrameLayout
         android:id="@+id/container"
@@ -34,14 +33,14 @@
 
     <TextView
         android:id="@+id/txtresults"
-        android:layout_width="178dp"
-        android:layout_height="35dp"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:layout_margin="10dp"
         android:gravity="center"
         android:inputType="textMultiLine"
         android:scrollbars="vertical"
-        android:text="Resultados:"
-        android:textSize="20sp"
+        android:text="UBICACIÓN"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +54,7 @@
         android:layout_marginStart="28dp"
         android:layout_marginBottom="4dp"
         android:onClick="abrirCamera"
-        android:text="Cámara"
+        android:text="CÁMARA"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -65,8 +64,9 @@
         android:layout_height="36dp"
         android:ems="10"
         android:inputType="text"
-        android:text="80"
+        android:text="95"
         android:textSize="14sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/txtresults"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtresults"

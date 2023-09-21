@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.example.deteccionlugaresuteq.ModelTFLControl.TFLControl;
 import com.example.deteccionlugaresuteq.ml.ModelLugaresUteq0;
+import com.example.deteccionlugaresuteq.ml.ModelLugaresUteq1;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.vision.text.Text;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         permisos_requeridos.add(android.Manifest.permission.READ_EXTERNAL_STORAGE);
 
         txtResults = findViewById(R.id.txtresults);
-        txtPorcentajeValido = findViewById(R.id.txtPorcentajeValido);
+        //txtPorcentajeValido = findViewById(R.id.txtPorcentajeValido);
 
         btnCamara = findViewById(R.id.btCamera);
         //btnGaleria=  findViewById(R.id.btGallery);
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity
     public void Reconocer(Bitmap imagen){
         try {
             //Instanciar el modelo basado en el creado (tensor flow lite)
-            ModelLugaresUteq0 model = ModelLugaresUteq0.newInstance(getApplicationContext());
+            ModelLugaresUteq1 model = ModelLugaresUteq1.newInstance(getApplicationContext());
 
             //Definir un bitmap para enviarlo al modelo creado.
             imagen = Bitmap.createScaledBitmap(imagen, TAMANIO_IMAGEN, TAMANIO_IMAGEN, true);
@@ -118,13 +119,33 @@ public class MainActivity extends AppCompatActivity
             //Cargar los bytes obtenidos al modelo de tensorflow.
             inputFeature0.loadBuffer(byteBuffer);
 
-            ModelLugaresUteq0.Outputs outputs = model.process(inputFeature0);
+            ModelLugaresUteq1.Outputs outputs = model.process(inputFeature0);
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
             //Obtener los resultados correspondientes a las neuronas existentes en el modelo.
             float[] confidences = outputFeature0.getFloatArray();
-            //String[] classes = {"Gerard Way", "Brendon Urie", "Freddie Mercury"};
-            String[] classes = {"Polideportivo", "FCE", "Rotonda"};
+
+            //Versión 0 del modelo:
+            //String[] classes = {"Polideportivo", "FCE", "Rotonda"};
+
+            //Versión 1 del modelo:
+            String[] classes = {"Polideportivo",
+                    "Facultad de ciencias empresariales",
+                    "Facultad de ciencias sociales, económicas y financieras",
+                    "Comedor",
+                    "Parqueadero",
+                    "Facultad de ciencias de la salud",
+                    "Rectorado",
+                    "Departamento de archivos",
+                    "Facultad de ciencias de pedagogía",
+                    "Departamento médico",
+                    "Departamento de investigación",
+                    "Biblioteca",
+                    "Bar",
+                    "Departamento de archivos",
+                    "Auditorio",
+                    "Departamento de informática",
+                    "Rotonda"};
 
             TFLControl controlModeloTFl = new TFLControl(confidences, classes);
             controlModeloTFl.ordenarResultados();
@@ -134,17 +155,17 @@ public class MainActivity extends AppCompatActivity
             float [] probabilidadesOrdenadas = controlModeloTFl.getConfidence();
 
             String textoActual = txtResults.getText().toString();
-            String resultado = "";
+            String resultado = textoActual;
 
             if (etiquetasOrdenadas.length > 0){
                 if (probabilidadesOrdenadas[0] * 100 > PROBABILIDAD_VALIDA){
                     resultado = etiquetasOrdenadas[0];
                     prediccionModelo = resultado;
-                    if (textoActual != resultado) tts.speak(resultado, TextToSpeech.QUEUE_FLUSH, null);
+                    if (textoActual != resultado) tts.speak(resultado.toUpperCase(), TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
 
-            txtResults.setText(resultado);
+            txtResults.setText(resultado.toUpperCase());
 
             //Finalmente, cerrar el modelo.
             model.close();
@@ -160,8 +181,8 @@ public class MainActivity extends AppCompatActivity
     public void abrirCamera (View view){
         //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //startActivityForResult(intent, REQUEST_CAMERA);
-        PROBABILIDAD_VALIDA = Float.parseFloat(txtPorcentajeValido.getText().toString());
-        Log.i("TEST_0", "PRUEBA_");
+        //PROBABILIDAD_VALIDA = Float.parseFloat(txtPorcentajeValido.getText().toString());
+
         this.setFragment();
     }
 
@@ -234,7 +255,6 @@ public class MainActivity extends AppCompatActivity
     int sensorOrientation;
 
     protected void setFragment() {
-        Log.i("TEST_0", "PRUEBA_");
         final CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         String cameraId = null;
         try {
@@ -242,7 +262,6 @@ public class MainActivity extends AppCompatActivity
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
-        Log.i("TEST_1", "PRUEBA_");
         CameraConnectionFragment fragment;
         CameraConnectionFragment camera2Fragment =
                 CameraConnectionFragment.newInstance(
@@ -257,7 +276,6 @@ public class MainActivity extends AppCompatActivity
         camera2Fragment.setCamera(cameraId);
         fragment = camera2Fragment;
         getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-        Log.i("TEST_2", "PRUEBA_");
     }
     protected int getScreenOrientation() {
         switch (getWindowManager().getDefaultDisplay().getRotation()) {
@@ -327,31 +345,6 @@ public class MainActivity extends AppCompatActivity
 
         try {
             Reconocer(rgbFrameBitmap);
-            /*Modelomascota model = Modelomascota.newInstance(getApplicationContext());
-            TensorImage image = TensorImage.fromBitmap(rgbFrameBitmap);
-
-            Modelomascota.Outputs outputs = model.process(image);
-            List<Category> probability = outputs.getProbabilityAsCategoryList();
-            Collections.sort(probability, new CategoryComparator());
-
-            //Una vez es ordenado el vector de categorías la posición 0 es la que contiene la mayor probabilidad.
-            String prediccion = "";
-            Float probabilidad = 0f;
-
-            String textoActual = txtResults.getText().toString();
-            prediccion = probability.get(0).getLabel();
-            probabilidad = probability.get(0).getScore();
-
-            //Verificar que la probabilidad más alta sea mayor a un valor específico.
-            if (probabilidad * 100 > PROBABILIDAD_VALIDA)
-                if (textoActual != prediccion) {
-                    prediccionModelo = prediccion;
-                    txtResults.setText(prediccion);
-                    tts.speak(prediccion, TextToSpeech.QUEUE_FLUSH, null);
-                }
-
-
-            model.close();*/
         } catch (Exception e) {
             txtResults.setText("Error al procesar Modelo");
         }
@@ -359,7 +352,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void btn_LeerTexto(View view){
-        tts.speak(prediccionModelo, TextToSpeech.QUEUE_FLUSH, null, null);
+        tts.speak(txtResults.getText().toString(), TextToSpeech.QUEUE_FLUSH, null, null);
     }
 }
 
